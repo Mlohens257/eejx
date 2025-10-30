@@ -1,6 +1,7 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = []
+build-backend = "eejx._build.backend"
+backend-path = ["."]
 
 [project]
 name = "eejx"
@@ -9,7 +10,6 @@ description = "Deterministic EE toolchain with LLM extraction"
 authors = [{name = "EEJX"}]
 requires-python = ">=3.10"
 dependencies = [
-    "pydantic>=1.10",
     "typer[all]>=0.9",
     "rich>=13.0",
 ]

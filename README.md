@@ -3,7 +3,7 @@ Deterministic EE toolchain with LLM extraction → typed project graph → valid
 
 ## Features
 
-* JSON schema + lightweight Pydantic-compatible models for the project graph.
+* JSON schema + lightweight Pydantic-compatible models for the project graph (ships with an in-tree shim so no external `pydantic` install is required).
 * Deterministic validators covering topology, voltage/phase compatibility, basic ampacity checks, and analysis coverage.
 * Analysis modules for load calculation, voltage drop, and a short-circuit stub.
 * CLI for validation, analysis, and export flows (`python -m eejx.cli --help`).
