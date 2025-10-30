@@ -8,7 +8,7 @@ def test_project_metadata_matches_pyproject():
     assert meta.name == "eejx"
     assert meta.version == "0.1.0"
     assert meta.requires_python == ">=3.10"
-    assert "typer>=0.9" in meta.dependencies
+    assert "typer[all]>=0.9" in meta.dependencies
     assert "rich>=13.0" in meta.dependencies
     assert meta.scripts == {"eejx": "eejx.cli:main"}
 
