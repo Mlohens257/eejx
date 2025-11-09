@@ -1,6 +1,6 @@
 # EE MVP
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/example/eejx/blob/main/examples/demo_notebook.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ee-mvp/eejx/blob/main/examples/demo_notebook.ipynb)
 
 Bootstrap package for lightweight NEC-inspired electrical-engineering analysis. The
 project ships with a tiny data set so the utilities can be exercised without
