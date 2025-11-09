@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ee-mvp"
+version = "0.1.0"
+description = "Bootstrap NEC-friendly electrical engineering calculations"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "EE MVP"}]
+dependencies = [
+    "pandas>=2.0",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q"
+pythonpath = ["."]
