@@ -1,0 +1,78 @@
+{
+  "name": "Demo NEC MVP",
+  "code": {"nec_year": 2020},
+  "analysis_flags": {"load": true, "voltage_drop": true, "short_circuit": true},
+  "settings": {"pf": 0.9},
+  "assumptions": [{"id": "A1", "text": "Placeholder assumptions for the demo project."}],
+  "sources": [{"id": "S1", "file": "demo.pdf"}],
+  "nodes": [
+    {"id": "MSB", "type": "switchboard", "voltage_ll_V": 480.0, "rating_A": 800, "available_fault_kA": 25.0},
+    {"id": "PANEL-A", "type": "panel", "voltage_ll_V": 480.0, "rating_A": 225},
+    {"id": "PANEL-B", "type": "panel", "voltage_ll_V": 208.0, "rating_A": 150},
+    {"id": "PANEL-TAP", "type": "panel", "voltage_ll_V": 480.0, "rating_A": 100}
+  ],
+  "edges": [
+    {
+      "from_id": "MSB",
+      "to_id": "PANEL-A",
+      "cable": {
+        "conductor": "Al",
+        "size_awg": "350",
+        "qty_per_phase": 1,
+        "installation": "EMT",
+        "length_ft": 50.0,
+        "is_feeder": true
+      }
+    },
+    {
+      "from_id": "PANEL-A",
+      "to_id": "PANEL-B",
+      "ocpd": {"type": "breaker", "rating_A": 125},
+      "cable": {
+        "conductor": "Cu",
+        "size_awg": "2/0",
+        "qty_per_phase": 1,
+        "installation": "EMT",
+        "length_ft": 120.0,
+        "is_feeder": true
+      }
+    },
+    {
+      "from_id": "MSB",
+      "to_id": "PANEL-TAP",
+      "cable": {
+        "conductor": "Cu",
+        "size_awg": "3/0",
+        "qty_per_phase": 1,
+        "installation": "EMT",
+        "length_ft": 18.0,
+        "is_feeder": true,
+        "is_tap": true,
+        "tap_rule": "25ft",
+        "tap_termination_has_ocpd": true
+      }
+    }
+  ],
+  "panel_schedules": [
+    {
+      "panel_id": "PANEL-A",
+      "entries": [
+        {"ckt": "1-3", "desc": "Lighting", "kVA": 15.0, "cont": true},
+        {"ckt": "5-7", "desc": "Receptacles", "kVA": 10.0, "cont": false}
+      ]
+    },
+    {
+      "panel_id": "PANEL-B",
+      "entries": [
+        {"ckt": "1-3", "desc": "Workstations", "kVA": 12.0, "cont": false},
+        {"ckt": "5-7", "desc": "Server", "kVA": 8.0, "cont": true}
+      ]
+    },
+    {
+      "panel_id": "PANEL-TAP",
+      "entries": [
+        {"ckt": "1-3", "desc": "Tap Load", "kVA": 20.0, "cont": false}
+      ]
+    }
+  ]
+}
