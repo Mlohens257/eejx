@@ -227,9 +227,27 @@ class _Calculator:
         return pd.DataFrame(records)
 
 
+class _AnalysisDataFrame(pd.DataFrame):
+    """``DataFrame`` subclass that preserves a ``_rows`` attribute."""
+
+    _metadata = ["_rows"]
+
+    @property
+    def _constructor(self):  # pragma: no cover - inherited behavior exercised indirectly
+        return _AnalysisDataFrame
+
+
+def _attach_rows_attr(df: pd.DataFrame) -> pd.DataFrame:
+    """Attach a ``_rows`` attribute with the frame's record representation."""
+
+    frame = _AnalysisDataFrame(df) if not isinstance(df, _AnalysisDataFrame) else df
+    frame._rows = frame.to_dict("records")
+    return frame
+
+
 def _rounded(df: pd.DataFrame, digits: int = 3) -> pd.DataFrame:
     if df.empty:
-        return df.copy()
+        return _attach_rows_attr(df.copy())
     rounded = df.copy()
     for column in rounded.columns:
         series = rounded[column]
@@ -238,7 +256,7 @@ def _rounded(df: pd.DataFrame, digits: int = 3) -> pd.DataFrame:
         mask = series.apply(lambda value: isinstance(value, Real) and not isinstance(value, bool))
         if mask.any():
             rounded.loc[mask, column] = series[mask].apply(lambda value: round(value, digits))
-    return rounded
+    return _attach_rows_attr(rounded)
 
 
 def _write_csv(path: Path, df: pd.DataFrame) -> None:
