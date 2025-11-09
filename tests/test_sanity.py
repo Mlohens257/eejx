@@ -19,3 +19,10 @@ def test_demo_project_runs(tmp_path):
     }
     actual = {path.name for path in tmp_path.iterdir()}
     assert expected_files.issubset(actual)
+
+
+def test_demo_project_runs_from_json_string():
+    project_path = Path(__file__).resolve().parents[1] / "examples" / "demo_project.json"
+    project_json = project_path.read_text()
+    results = analyze(project_json, DEFAULT_CONFIG)
+    assert all(not frame.empty for frame in results.values())

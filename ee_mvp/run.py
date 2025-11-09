@@ -38,7 +38,17 @@ def load_config(config: Dict[str, float] | None = None) -> Dict[str, float]:
 def _ensure_project(project: Project | Dict | str | Path) -> Project:
     if isinstance(project, Project):
         return project
-    if isinstance(project, (str, Path)):
+    if isinstance(project, str):
+        stripped = project.strip()
+        if stripped.startswith("{") or stripped.startswith("["):
+            try:
+                data = json.loads(project)
+            except json.JSONDecodeError:
+                pass
+            else:
+                return load_project(data)
+        return load_project_file(project)
+    if isinstance(project, Path):
         return load_project_file(project)
     if isinstance(project, dict):
         return load_project(project)
