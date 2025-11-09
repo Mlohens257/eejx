@@ -11,6 +11,7 @@ from typing import Dict, List, Tuple
 import json
 
 import pandas as pd
+from pandas.api.types import is_bool_dtype
 
 from .models import PanelSchedule, Project, load_project, load_project_file
 from .version import EE_MVP_VERSION
@@ -228,22 +229,15 @@ class _Calculator:
 
 def _rounded(df: pd.DataFrame, digits: int = 3) -> pd.DataFrame:
     if df.empty:
-        return df
+        return df.copy()
     rounded = df.copy()
-    numeric_columns: List[str] = []
     for column in rounded.columns:
-        values = rounded[column]
-        if all(
-            isinstance(value, Real) and not isinstance(value, bool)
-            for value in values
-            if value is not None
-        ):
-            numeric_columns.append(column)
-    for column in numeric_columns:
-        rounded.loc[:, column] = [
-            round(value, digits) if isinstance(value, (int, float)) else value
-            for value in rounded[column]
-        ]
+        series = rounded[column]
+        if is_bool_dtype(series):
+            continue
+        mask = series.apply(lambda value: isinstance(value, Real) and not isinstance(value, bool))
+        if mask.any():
+            rounded.loc[mask, column] = series[mask].apply(lambda value: round(value, digits))
     return rounded
 
 
