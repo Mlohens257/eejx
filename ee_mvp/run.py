@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from math import sqrt
+from numbers import Real
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -232,17 +233,17 @@ def _rounded(df: pd.DataFrame, digits: int = 3) -> pd.DataFrame:
     numeric_columns: List[str] = []
     for column in rounded.columns:
         values = rounded[column]
-        if all(isinstance(value, (int, float)) for value in values if value is not None):
+        if all(
+            isinstance(value, Real) and not isinstance(value, bool)
+            for value in values
+            if value is not None
+        ):
             numeric_columns.append(column)
     for column in numeric_columns:
-        new_values = []
-        for value in rounded[column]:
-            if isinstance(value, (int, float)):
-                new_values.append(round(value, digits))
-            else:
-                new_values.append(value)
-        for idx, value in enumerate(new_values):
-            rounded._rows[idx][column] = value  # type: ignore[attr-defined]
+        rounded.loc[:, column] = [
+            round(value, digits) if isinstance(value, (int, float)) else value
+            for value in rounded[column]
+        ]
     return rounded
 
 
