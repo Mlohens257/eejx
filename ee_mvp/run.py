@@ -227,14 +227,22 @@ class _Calculator:
         return pd.DataFrame(records)
 
 
+class _AnalysisDataFrame(pd.DataFrame):
+    """``DataFrame`` subclass that preserves a ``_rows`` attribute."""
+
+    _metadata = ["_rows"]
+
+    @property
+    def _constructor(self):  # pragma: no cover - inherited behavior exercised indirectly
+        return _AnalysisDataFrame
+
+
 def _attach_rows_attr(df: pd.DataFrame) -> pd.DataFrame:
     """Attach a ``_rows`` attribute with the frame's record representation."""
 
-    # ``DataFrame`` implements ``__setattr__`` to guard against creating columns
-    # via attribute assignment.  Writing to ``__dict__`` lets us stash an
-    # attribute without triggering that guard or emitting a warning.
-    df.__dict__["_rows"] = df.to_dict("records")
-    return df
+    frame = _AnalysisDataFrame(df) if not isinstance(df, _AnalysisDataFrame) else df
+    frame._rows = frame.to_dict("records")
+    return frame
 
 
 def _rounded(df: pd.DataFrame, digits: int = 3) -> pd.DataFrame:
