@@ -9,10 +9,7 @@ description = "Bootstrap NEC-friendly electrical engineering calculations"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "EE MVP"}]
-dependencies = [
-    "pandas>=2.0",
-    "pydantic>=2.0",
-]
+dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest"]
