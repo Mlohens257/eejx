@@ -26,3 +26,12 @@ def test_demo_project_runs_from_json_string():
     project_json = project_path.read_text()
     results = analyze(project_json, DEFAULT_CONFIG)
     assert all(not frame.empty for frame in results.values())
+
+
+def test_results_expose_rows_attribute():
+    project_path = Path(__file__).resolve().parents[1] / "examples" / "demo_project.json"
+    project = project_path.read_text()
+    results = analyze(project, DEFAULT_CONFIG)
+    for frame in results.values():
+        assert hasattr(frame, "_rows")
+        assert frame._rows == frame.to_dict("records")

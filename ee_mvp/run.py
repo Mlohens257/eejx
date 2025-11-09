@@ -227,9 +227,19 @@ class _Calculator:
         return pd.DataFrame(records)
 
 
+def _attach_rows_attr(df: pd.DataFrame) -> pd.DataFrame:
+    """Attach a ``_rows`` attribute with the frame's record representation."""
+
+    # ``DataFrame`` implements ``__setattr__`` to guard against creating columns
+    # via attribute assignment.  Writing to ``__dict__`` lets us stash an
+    # attribute without triggering that guard or emitting a warning.
+    df.__dict__["_rows"] = df.to_dict("records")
+    return df
+
+
 def _rounded(df: pd.DataFrame, digits: int = 3) -> pd.DataFrame:
     if df.empty:
-        return df.copy()
+        return _attach_rows_attr(df.copy())
     rounded = df.copy()
     for column in rounded.columns:
         series = rounded[column]
@@ -238,7 +248,7 @@ def _rounded(df: pd.DataFrame, digits: int = 3) -> pd.DataFrame:
         mask = series.apply(lambda value: isinstance(value, Real) and not isinstance(value, bool))
         if mask.any():
             rounded.loc[mask, column] = series[mask].apply(lambda value: round(value, digits))
-    return rounded
+    return _attach_rows_attr(rounded)
 
 
 def _write_csv(path: Path, df: pd.DataFrame) -> None:
